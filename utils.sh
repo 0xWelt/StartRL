@@ -85,12 +85,6 @@ try_install() {
     fi
 }
 
-# --- get the activated conda env name
-get_activated_conda() {
-    cmd='conda info | grep "active environment" | awk '"'{print \$4}'"
-    eval $cmd
-}
-
 # --- check whether anaconda is installed
 check_conda_installed() {
     if [ ! -d "$HOME/anaconda3" ]; then
@@ -99,13 +93,20 @@ check_conda_installed() {
     fi
 }
 
+# --- get the activated conda env name
+get_activated_conda() {
+    cmd='conda info | grep "active environment" | awk '"'{print \$4}'"
+    eval $cmd
+}
+
 # --- check conda env
 check_conda_env() {
+    check_conda_installed
     warn "Are you going to install in '$(get_activated_conda)' env? "
     echo -n "([y]/n, default yes) > "
     read
     case $REPLY in
-    [Nn]o)
+    [Nn]*)
         error "Abort. " && exit 1
         ;;
     esac
